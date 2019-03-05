@@ -165,7 +165,7 @@ func BuildModel(properties pool.Properties, options pool.Options) (*Model, error
 	spec, err := fsm.Define(
 		fsm.State{
 			Index: requested,
-			TTL:   fsm.Expiry{options.WaitBeforeProvision, provision},
+			TTL:   fsm.Expiry{TTL: options.WaitBeforeProvision, Raise: provision},
 			Transitions: map[fsm.Signal]fsm.Index{
 				resourceFound: ready,
 				resourceLost:  provisioning,
@@ -199,7 +199,7 @@ func BuildModel(properties pool.Properties, options pool.Options) (*Model, error
 		},
 		fsm.State{
 			Index: throttled,
-			TTL:   fsm.Expiry{fsm.Tick(1), provision},
+			TTL:   fsm.Expiry{TTL: fsm.Tick(1), Raise: provision},
 			Transitions: map[fsm.Signal]fsm.Index{
 				resourceFound: ready,
 				resourceLost:  provisioning,
@@ -214,7 +214,7 @@ func BuildModel(properties pool.Properties, options pool.Options) (*Model, error
 		},
 		fsm.State{
 			Index: terminateThrottled,
-			TTL:   fsm.Expiry{fsm.Tick(1), terminate},
+			TTL:   fsm.Expiry{TTL: fsm.Tick(1), Raise: terminate},
 			Transitions: map[fsm.Signal]fsm.Index{
 				resourceLost: terminated,
 				terminate:    terminating,
@@ -297,7 +297,7 @@ func BuildModel(properties pool.Properties, options pool.Options) (*Model, error
 		},
 		fsm.State{
 			Index: unmatched,
-			TTL:   fsm.Expiry{options.WaitBeforeDestroy, terminate},
+			TTL:   fsm.Expiry{TTL: options.WaitBeforeDestroy, Raise: terminate},
 			Transitions: map[fsm.Signal]fsm.Index{
 				terminate: terminating,
 			},
@@ -310,7 +310,7 @@ func BuildModel(properties pool.Properties, options pool.Options) (*Model, error
 		},
 		fsm.State{
 			Index: terminated,
-			TTL:   fsm.Expiry{options.WaitBeforeDestroy, cleanup},
+			TTL:   fsm.Expiry{TTL: options.WaitBeforeDestroy, Raise: cleanup},
 			Transitions: map[fsm.Signal]fsm.Index{
 				cleanup: terminated, // This is really unnecessary, just here to trigger the cleanup action
 			},

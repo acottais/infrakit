@@ -163,7 +163,7 @@ func BuildModel(properties resource.Properties, options resource.Options) (*Mode
 	spec, err := fsm.Define(
 		fsm.State{
 			Index: requested,
-			TTL:   fsm.Expiry{options.WaitBeforeProvision, provision},
+			TTL:   fsm.Expiry{TTL: options.WaitBeforeProvision, Raise: provision},
 			Transitions: map[fsm.Signal]fsm.Index{
 				resourceFound: ready,
 				resourceLost:  provisioning,
@@ -266,7 +266,7 @@ func BuildModel(properties resource.Properties, options resource.Options) (*Mode
 		},
 		fsm.State{
 			Index: unmatched,
-			TTL:   fsm.Expiry{options.WaitBeforeDestroy, terminate},
+			TTL:   fsm.Expiry{TTL: options.WaitBeforeDestroy, Raise: terminate},
 			Transitions: map[fsm.Signal]fsm.Index{
 				terminate: terminating,
 			},
@@ -279,7 +279,7 @@ func BuildModel(properties resource.Properties, options resource.Options) (*Mode
 		},
 		fsm.State{
 			Index: terminated,
-			TTL:   fsm.Expiry{options.WaitBeforeDestroy, cleanup},
+			TTL:   fsm.Expiry{TTL: options.WaitBeforeDestroy, Raise: cleanup},
 			Transitions: map[fsm.Signal]fsm.Index{
 				cleanup: terminated, // This is really unnecessary, just here to trigger the cleanup action
 			},

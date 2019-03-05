@@ -112,7 +112,7 @@ func (p awsQueuePlugin) DescribeInstances(tags map[string]string, properties boo
 			}
 		}
 		if id == instance.ID("") {
-			return []instance.Description{}, fmt.Errorf("QueueArn not found for %s", queueURL)
+			return []instance.Description{}, fmt.Errorf("QueueArn not found for %s", *queueURL)
 		}
 
 		descriptions = append(descriptions, instance.Description{ID: id})

@@ -18,7 +18,7 @@ import (
 type reaper struct {
 	*internal.Collection
 
-	properties gc.Properties
+	properties *gc.Properties
 	options    gc.Options
 
 	model Model
@@ -108,12 +108,12 @@ func (r *reaper) updateSpec(spec types.Spec, prev *types.Spec) error {
 		return err
 	}
 
-	model, err := model(properties)
+	model, err := model(&properties)
 	if err != nil {
 		return err
 	}
 
-	instanceObserver := properties.InstanceObserver
+	var instanceObserver = &properties.InstanceObserver
 	if err := instanceObserver.Validate(defaultInstanceObserver); err != nil {
 		return err
 	}
@@ -121,7 +121,7 @@ func (r *reaper) updateSpec(spec types.Spec, prev *types.Spec) error {
 		return err
 	}
 
-	nodeObserver := properties.NodeObserver
+	nodeObserver := &properties.NodeObserver
 	if err := nodeObserver.Validate(defaultInstanceObserver); err != nil {
 		return err
 	}
@@ -129,8 +129,8 @@ func (r *reaper) updateSpec(spec types.Spec, prev *types.Spec) error {
 		return err
 	}
 
-	r.instanceObserver = &instanceObserver
-	r.nodeObserver = &nodeObserver
+	r.instanceObserver = instanceObserver
+	r.nodeObserver = nodeObserver
 
 	r.instances = instance_plugin.LazyConnect(
 		func() (instance.Plugin, error) {
@@ -143,7 +143,7 @@ func (r *reaper) updateSpec(spec types.Spec, prev *types.Spec) error {
 		},
 		r.options.PluginRetryInterval.Duration())
 
-	r.properties = properties
+	r.properties = &properties
 	r.model = model
 	return nil
 }

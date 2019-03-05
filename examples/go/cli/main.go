@@ -47,12 +47,13 @@ func main() {
 	}
 
 	// Commands from playbooks
+	options := playbook.Options{ShowAllWarnings: false, Options: template.Options{}}
 	playbooks, err := playbook.NewModules(
 		scope.Nil,
 		playbook.Modules{
 			playbook.Op(prog): playbook.SourceURL(makeURL(os.Args[1])),
 		},
-		os.Stdin, template.Options{})
+		os.Stdin, options)
 
 	if err != nil {
 		panic(err)

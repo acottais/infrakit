@@ -3,6 +3,9 @@ package bootstrap // import "github.com/docker/infrakit/pkg/provider/aws/experim
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"os"
+
 	log "github.com/Sirupsen/logrus"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/ec2"
@@ -10,8 +13,6 @@ import (
 	"github.com/docker/infrakit/pkg/spi/group"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"io/ioutil"
-	"os"
 )
 
 // NewCLI creates a CLI.
@@ -181,5 +182,5 @@ type logger struct {
 }
 
 func (l logger) Log(args ...interface{}) {
-	log.Println(args)
+	log.Println(args...)
 }

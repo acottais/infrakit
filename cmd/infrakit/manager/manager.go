@@ -16,7 +16,6 @@ import (
 	"github.com/docker/infrakit/pkg/rpc/client"
 	group_rpc "github.com/docker/infrakit/pkg/rpc/group"
 	manager_rpc "github.com/docker/infrakit/pkg/rpc/manager"
-	metadata_rpc "github.com/docker/infrakit/pkg/rpc/metadata"
 	"github.com/docker/infrakit/pkg/run/local"
 	"github.com/docker/infrakit/pkg/run/scope"
 	"github.com/docker/infrakit/pkg/spi/group"
@@ -38,10 +37,6 @@ func Command(scope scope.Scope) *cobra.Command {
 	services := cli.NewServices(scope)
 
 	var groupPlugin group.Plugin
-	var groupPluginName string
-
-	var updatablePlugin metadata.Updatable
-	var updatablePluginName string
 
 	cmd := &cobra.Command{
 		Use:   "manager",
@@ -74,12 +69,8 @@ func Command(scope scope.Scope) *cobra.Command {
 
 						pn := plugin.Name(name)
 						groupPlugin = group_rpc.Adapt(pn, rpcClient)
-						groupPluginName = name
 
 						log.Debug("Found manager", "name", name, "addr", endpoint.Address)
-
-						updatablePlugin = metadata_rpc.AdaptUpdatable(pn, rpcClient)
-						updatablePluginName = name
 
 						log.Debug("Found updatable", "name", name, "addr", endpoint.Address)
 						break

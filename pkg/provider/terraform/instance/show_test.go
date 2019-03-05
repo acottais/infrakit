@@ -249,7 +249,7 @@ type.host:
 	)
 	require.NoError(t, err)
 	expected := TResourceProperties{
-		"id": 123,
+		"id":                         123,
 		"destination_cidr_block":     "0.0.0.0/0",
 		"destination_prefix_list_id": "",
 		"gateway_id":                 "igw-c5fcffac",
@@ -606,8 +606,8 @@ func TestTerraformShowParseResultAwsSubnet(t *testing.T) {
 		"availability_zone":       "eu-central-1a",
 		"cidr_block":              "10.0.1.0/24",
 		"map_public_ip_on_launch": true,
-		"tags":   map[string]interface{}{"provisioner": "infrakit-terraform-demo"},
-		"vpc_id": "vpc-f8d45a90",
+		"tags":                    map[string]interface{}{"provisioner": "infrakit-terraform-demo"},
+		"vpc_id":                  "vpc-f8d45a90",
 	}
 	require.Equal(t, expected, found[TResourceType("aws_subnet")][TResourceName("default")])
 

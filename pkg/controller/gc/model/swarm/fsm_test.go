@@ -29,7 +29,7 @@ InstanceObserver:
 
 	require.NoError(t, err)
 
-	m, err := BuildModel(*gcProperties)
+	m, err := BuildModel(gcProperties)
 	require.NoError(t, err)
 
 	model := m.(*model)

@@ -18,9 +18,7 @@ func TestUpdatable(t *testing.T) {
 	}
 	readonly := NewPluginFromData(data)
 
-	var store *types.Any
 	commit := func(proposed *types.Any) error {
-		store = proposed
 		return nil
 	}
 

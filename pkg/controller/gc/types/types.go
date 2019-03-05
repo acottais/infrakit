@@ -68,7 +68,7 @@ type Properties struct {
 }
 
 // Validate validates the input properties
-func (p Properties) Validate(ctx context.Context) error {
+func (p *Properties) Validate(ctx context.Context) error {
 	return nil
 }
 

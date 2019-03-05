@@ -76,7 +76,7 @@ func (p rackHDInstancePlugin) DescribeInstances(tags map[string]string, properti
 			}
 		}
 	}
-	log.Infof("Instance descriptions retrieved as %s", descriptions)
+	log.Infof("Instance descriptions retrieved as %v", descriptions)
 	return descriptions, nil
 }
 

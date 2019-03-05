@@ -10,19 +10,19 @@ import (
 )
 
 var (
-	models = map[string]func(gc.Properties) (Model, error){}
+	models = map[string]func(*gc.Properties) (Model, error){}
 	lock   sync.RWMutex
 )
 
 // Register registers an available model
-func Register(key string, builder func(gc.Properties) (Model, error)) {
+func Register(key string, builder func(*gc.Properties) (Model, error)) {
 	lock.Lock()
 	defer lock.Unlock()
 
 	models[key] = builder
 }
 
-func model(properties gc.Properties) (Model, error) {
+func model(properties *gc.Properties) (Model, error) {
 	lock.RLock()
 	defer lock.RUnlock()
 

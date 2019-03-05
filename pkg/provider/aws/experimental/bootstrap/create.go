@@ -681,7 +681,7 @@ func bootstrap(spec clusterSpec) error {
 		return fmt.Errorf("Failed to fetch boot leader: %s", err)
 	}
 	if len(leaders) != 1 {
-		log.Warnf("Expected exactly one boot leader, but found %s", len(instances))
+		log.Warnf("Expected exactly one boot leader, but found %d", len(instances))
 		return nil
 	}
 
@@ -711,7 +711,7 @@ func generateInfraKitGroups(spec clusterSpec) (map[group.ID]string, error) {
 		templateText := ""
 		templateParams := map[string]interface{}{
 			"CreateInstanceRequest": grp.Config,
-			"ID": grp.Name,
+			"ID":                    grp.Name,
 		}
 
 		if grp.isManager() {

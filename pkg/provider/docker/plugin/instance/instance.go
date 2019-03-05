@@ -324,7 +324,7 @@ func (p dockerInstancePlugin) Provision(spec instance.Spec) (*instance.ID, error
 			keepLooping = execInspect.Running
 		}
 		if exitCode != 0 {
-			log.Warningf("failed to exec init script for container %d", r.ID[0:12])
+			log.Warningf("failed to exec init script for container %s", r.ID[0:12])
 			rc, err := cli.ContainerLogs(ctx, r.ID, apitypes.ContainerLogsOptions{ShowStdout: true, ShowStderr: true})
 			if err != nil {
 				log.Warning(err)

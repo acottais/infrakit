@@ -84,7 +84,7 @@ type model struct {
 	clock    *fsm.Clock
 	tickSize time.Duration
 
-	gc_types.Properties
+	*gc_types.Properties
 	modelProperties
 
 	dockerNodeRmChan    chan fsm.FSM
@@ -204,7 +204,7 @@ func longer(a, b time.Duration) time.Duration {
 }
 
 // BuildModel constructs a workflow model given the configuration blob provided by user in the Properties
-func BuildModel(properties gc_types.Properties) (gc.Model, error) {
+func BuildModel(properties *gc_types.Properties) (gc.Model, error) {
 
 	modelProperties := defaultModelProperties
 	if properties.ModelProperties != nil {
@@ -231,7 +231,7 @@ func BuildModel(properties gc_types.Properties) (gc.Model, error) {
 	spec, err := fsm.Define(
 		fsm.State{
 			Index: start,
-			TTL:   fsm.Expiry{modelProperties.NoData, timeout},
+			TTL:   fsm.Expiry{TTL: modelProperties.NoData, Raise: timeout},
 			Transitions: map[fsm.Signal]fsm.Index{
 				dockerNodeReady: matchedDockerNode,
 				dockerNodeDown:  matchedDockerNode,
@@ -241,7 +241,7 @@ func BuildModel(properties gc_types.Properties) (gc.Model, error) {
 		},
 		fsm.State{
 			Index: matchedInstance,
-			TTL:   fsm.Expiry{modelProperties.DockerNodeJoin, dockerNodeGone},
+			TTL:   fsm.Expiry{TTL: modelProperties.DockerNodeJoin, Raise: dockerNodeGone},
 			Transitions: map[fsm.Signal]fsm.Index{
 				dockerNodeReady: swarmNode,
 				dockerNodeDown:  swarmNode,
@@ -254,7 +254,7 @@ func BuildModel(properties gc_types.Properties) (gc.Model, error) {
 		},
 		fsm.State{
 			Index: pendingInstanceDestroy,
-			TTL:   fsm.Expiry{modelProperties.WaitBeforeInstanceDestroy, reap},
+			TTL:   fsm.Expiry{TTL: modelProperties.WaitBeforeInstanceDestroy, Raise: reap},
 			Transitions: map[fsm.Signal]fsm.Index{
 				dockerNodeReady: swarmNode, // late joiner
 				instanceGone:    removedInstance,
@@ -267,7 +267,7 @@ func BuildModel(properties gc_types.Properties) (gc.Model, error) {
 		},
 		fsm.State{
 			Index: matchedDockerNode,
-			TTL:   fsm.Expiry{modelProperties.WaitDescribeInstances, instanceGone},
+			TTL:   fsm.Expiry{TTL: modelProperties.WaitDescribeInstances, Raise: instanceGone},
 			Transitions: map[fsm.Signal]fsm.Index{
 				instanceOK:     swarmNode,
 				instanceGone:   removedInstance,
@@ -296,7 +296,7 @@ func BuildModel(properties gc_types.Properties) (gc.Model, error) {
 		},
 		fsm.State{
 			Index: swarmNodeDown,
-			TTL:   fsm.Expiry{modelProperties.WaitBeforeReprovision, dockerNodeGone},
+			TTL:   fsm.Expiry{TTL: modelProperties.WaitBeforeReprovision, Raise: dockerNodeGone},
 			Transitions: map[fsm.Signal]fsm.Index{
 				dockerNodeReady: swarmNodeReady,
 				dockerNodeGone:  pendingInstanceDestroy,
@@ -305,7 +305,7 @@ func BuildModel(properties gc_types.Properties) (gc.Model, error) {
 		},
 		fsm.State{
 			Index: removedInstance, // after we removed the instance, we can still have unmatched node
-			TTL:   fsm.Expiry{modelProperties.WaitBeforeCleanup, timeout},
+			TTL:   fsm.Expiry{TTL: modelProperties.WaitBeforeCleanup, Raise: timeout},
 			Transitions: map[fsm.Signal]fsm.Index{
 				dockerNodeDown: done,
 				timeout:        done,

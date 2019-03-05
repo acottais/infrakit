@@ -2752,7 +2752,7 @@ func TestLabelMergeTags(t *testing.T) {
 		inst[key] = map[TResourceName]TResourceProperties{
 			TResourceName(id): {
 				fmt.Sprintf("key-%v", index): fmt.Sprintf("val-%v", index),
-				"tags": tags,
+				"tags":                       tags,
 			},
 		}
 		err := writeFile(tf, fmt.Sprintf("%v.tf.json", id), TFormat{Resource: inst})
@@ -2906,7 +2906,7 @@ func TestTerraformLogicalIDNoID(t *testing.T) {
 func TestTerraformLogicalIDFromMap(t *testing.T) {
 	props := TResourceProperties{
 		"tags": map[string]interface{}{
-			"foo": "bar",
+			"foo":                 "bar",
 			instance.LogicalIDTag: "logical-id",
 		},
 	}

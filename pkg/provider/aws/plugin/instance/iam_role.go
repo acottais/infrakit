@@ -76,7 +76,7 @@ func (p awsRolePlugin) Destroy(id instance.ID, ctx instance.Context) error {
 			RoleName:   &roleName,
 		})
 		if err != nil {
-			return fmt.Errorf("DeleteRolePolicy for %s failed: %s", policyName, err)
+			return fmt.Errorf("DeleteRolePolicy for %s failed: %s", *policyName, err)
 		}
 	}
 

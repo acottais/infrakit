@@ -156,7 +156,7 @@ vendor-update:
 
 terraform-linux:
 	@echo "+ $@"
-	wget -O tf.zip https://releases.hashicorp.com/terraform/0.9.3/terraform_0.9.3_linux_amd64.zip && unzip tf.zip && mv terraform ./build
+	wget -O tf.zip https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_linux_amd64.zip && unzip tf.zip && mv terraform ./build
 
 ################################
 #
